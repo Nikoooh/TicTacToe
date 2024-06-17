@@ -1,17 +1,21 @@
+import { useState } from "react"
 import Grid from "./Grid/Grid"
 
 const GameCard = (): JSX.Element => {
 
-  const defaultGrid: number[][] = [
-    [0, 0, 0, 0, 0], 
-    [0, 0, 0, 0, 0], 
-    [0, 0, 0, 0, 0], 
-    [0, 0, 0, 0, 0], 
-    [0, 0, 0, 0, 0]]
+  const [turn, setTurn] = useState<boolean>(true)
 
   return (
     <div className="game-container">
-      <Grid grid={defaultGrid} />
+      <div className="players-container">
+        <div className={`player1 max-width ${turn ? 'turn' : ''}`}>
+          <h4>Player 1</h4>
+        </div>
+        <div className={`player2 max-width ${!turn ? 'turn' : ''}`}>
+          <h4>Player 2</h4>
+        </div>
+      </div>
+      <Grid setTurn={setTurn} turn={turn}/>
     </div>
   )
 }
