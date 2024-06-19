@@ -38,7 +38,6 @@ export const checkWin = (grid: number[][], posX: number, posY: number, turn: boo
     }
 
     if (count >= 3) {  
-      console.log("Runs?"); 
       return true;
     }
   }
