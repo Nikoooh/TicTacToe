@@ -1,44 +1,60 @@
 
-export const CheckVictory = (grid: number[][], posX: number, posY: number, turn: boolean): boolean => {
+const inBounds = (grid: number[][], x: number, y: number): boolean => {
+  const N = grid.length;
+  return x >= 0 && x < N && y >= 0 && y < N;
+}
 
-  const inBounds = (x: number, y: number) => x >= 0 && x < grid.length && y >= 0 && y < grid[0].length;
+export const checkWin = (grid: number[][], posX: number, posY: number, turn: boolean): boolean => {
+  const directions = [
+    { x: 1, y: 0 },  
+    { x: 0, y: 1 },
+    { x: 1, y: 1 },  
+    { x: 1, y: -1 }  
+  ];
+
   const playerValue = turn ? 1 : 2
-
-  // Vertical
-  if (
-    (inBounds(posX, posY + 1) && grid[posX][posY + 1] === playerValue || inBounds(posX, posY - 1) && grid[posX][posY - 1] === playerValue) &&
-    (inBounds(posX, posY + 2) && grid[posX][posY + 2] === playerValue || inBounds(posX, posY - 2) && grid[posX][posY - 2] === playerValue)
-  ) {
-    return true;
-  }
-
-  // Horizontal
-  if (   
-    (inBounds(posX + 1, posY) && grid[posX + 1][posY] === playerValue || inBounds(posX - 1, posY) && grid[posX - 1][posY] === playerValue) &&
-    (inBounds(posX + 2, posY) && grid[posX + 2][posY] === playerValue || inBounds(posX - 2, posY) && grid[posX - 2][posY] === playerValue)
-  ) {
-    console.log(grid, posX, posY);
-    return true;
-  }
-
-  // Diagonal, Top right, Bottom left
-
-  if (
-    (inBounds(posX - 1, posY + 1) && grid[posX - 1][posY + 1] === playerValue || inBounds(posX + 1, posY - 1) && grid[posX + 1][posY - 1] === playerValue) &&
-    (inBounds(posX - 2, posY + 2) && grid[posX - 2][posY + 2] === playerValue || inBounds(posX + 2, posY - 2) && grid[posX + 2][posY - 2] === playerValue)
-  ) {
-    return true
-  }
-
-  // Diagonal, Top left, Bottom right 
-
-  if (
-    (inBounds(posX + 1, posY + 1) && grid[posX + 1][posY + 1] === playerValue || inBounds(posX - 1, posY - 1) && grid[posX - 1][posY - 1] === playerValue) &&
-    (inBounds(posX - 2, posY - 2) && grid[posX - 2][posY - 2] === playerValue || inBounds(posX + 2, posY + 2) && grid[posX + 2][posY + 2] === playerValue)
-  ) {
-    return true
-  }
   
+  for (const { x: dx, y: dy } of directions) {
+    let count = 1;
+
+    for (let step = 1; step <= 2; step++) {
+      const nx = posX + step * dx;
+      const ny = posY + step * dy;
+      if (inBounds(grid, nx, ny) && grid[nx][ny] === playerValue) {
+         count++;
+      } else {
+         break;
+      }
+    }
+
+    for (let step = 1; step <= 2; step++) {
+      const nx = posX - step * dx;
+      const ny = posY - step * dy;
+      if (inBounds(grid, nx, ny) && grid[nx][ny] === playerValue) {
+        count++;
+      } else {
+         break;
+      }
+    }
+
+    if (count >= 3) {  
+      console.log("Runs?"); 
+      return true;
+    }
+  }
+
+  return false;
+}
+
+export const checkTie = (grid: number[][]) => {
+  for (let i = 0; i < grid.length; i++) {
+    for (let j = 0; j < grid[0].length; j++) {
+      if (grid[i][j] === 0) {
+        return true
+      }
+    }
+  }
+
   return false
 
 }

@@ -1,4 +1,4 @@
-import { CheckVictory } from "../../utils/functions"
+import { checkWin } from "../../utils/functions"
 
 interface Props {
   tile: number
@@ -8,6 +8,7 @@ interface Props {
   setGrid: React.Dispatch<React.SetStateAction<number[][]>>
   rowIdx: number
   colIdx: number
+  setWon: React.Dispatch<React.SetStateAction<boolean>>
 }
 
 const Tile = (props: Props): JSX.Element => {
@@ -16,11 +17,11 @@ const Tile = (props: Props): JSX.Element => {
     if (props.tile === 1 || props.tile === 2) return
 
     const updatedGrid = props.grid.map(row => [...row]);
-  
     updatedGrid[props.rowIdx][props.colIdx] = props.turn ? 1 : 2;
-    
     props.setGrid(updatedGrid);
-    if (CheckVictory(props.grid, props.rowIdx, props.colIdx, props.turn)) {     
+
+    if (checkWin(updatedGrid, props.rowIdx, props.colIdx, props.turn)) {  
+      props.setWon(true)   
       setTimeout(() => {
         if(confirm(`Player ${props.turn ? '1' : '2'} has won`)) {
           props.setGrid([
